@@ -1,0 +1,75 @@
+<odoo>
+    <data>
+        <!-- model.name inherit tree view -->
+        <record id="sanwa_view_move_tree" model="ir.ui.view">
+            <field name="name">sanwa_view_move_tree</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_tree"/>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="date_voucher"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Stock-related subtypes for messaging / Chatter -->
+        <record id="mt_state_draft" model="mail.message.subtype">
+            <field name="name">Account Move Unposted</field>
+            <field name="res_model">account.move</field>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mt_state_posted" model="mail.message.subtype">
+            <field name="name">Account Move Posted</field>
+            <field name="res_model">account.move</field>
+            <field name="default" eval="False"/>
+        </record>
+
+        <!-- model.name inherit form view -->
+        <record id="ajm_account_view_move_form" model="ir.ui.view">
+            <field name="name">ajm_account_view_move_form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='journal_id']" position="after">
+                    <field name="no_cek_bank"/>
+                </xpath>
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="date_voucher"/>
+                </xpath>
+
+                <xpath expr="//field[@name='line_ids']" position="replace">
+                    <field name="line_ids" widget="one2many_list" context="{'line_ids': line_ids, 'journal_id': journal_id }">
+                        <tree editable="bottom" string="Journal Items" default_order='debit desc' >
+                            <field name="tax_line_id" invisible="1"/>
+                            <field name="account_id" domain="[('company_id', '=', parent.company_id), ('deprecated', '=', False)]"/>
+                            <field name="partner_id" domain="['|', ('parent_id', '=', False), ('is_company', '=', True)]"/>
+                            <field name="name"/>
+                            <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                            <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
+                            <field name="amount_currency" groups="base.group_multi_currency"/>
+                            <field name="company_currency_id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                            <field name="debit" sum="Total Debit"/>
+                            <field name="credit" sum="Total Credit"/>
+                            <field name="currency_debit" sum="Total Debit" invisible="1" />
+                            <field name="currency_credit" sum="Total Credit" invisible="1" />
+                            <field name="tax_ids" string="Taxes Applied" widget="many2many_tags" domain="[('type_tax_use', '=?', parent.tax_type_domain)]" context="{'append_type_to_tax_name': not parent.tax_type_domain}" options="{'no_create': True}"/>
+                            <field name="date_maturity" required="0" invisible="context.get('view_no_maturity', False)"/>
+                            <field name="recompute_tax_line" invisible="1" readonly="1"/>
+                            <field name="tax_line_grouping_key" invisible="1" readonly="1"/>
+                        </tree>
+                    </field>
+                </xpath>
+                <sheet position="after">
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" />
+                        <field name="message_ids" widget="mail_thread" />
+                    </div>
+                </sheet>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+        <!-- model.name inherit form view -->
+        <record id="ajm_view_account_journal_form" model="ir.ui.view">
+            <field name="name">ajm_view_account_journal_form</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='sequence_number_next']/parent::div" position="after">
+                    <field name="bank_statement_auto_sequence" />
+                    <field name="bankstatement_seq_code" readonly="1" attrs="{'invisible':[('bank_statement_auto_sequence', '=', False)]}" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

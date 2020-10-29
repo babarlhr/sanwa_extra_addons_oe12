@@ -1,0 +1,22 @@
+<odoo>
+	<data>
+		<!-- model.name inherit form view -->
+		<record id="ajm_account_view_bank_statement_form" model="ir.ui.view">
+			<field name="name">ajm_account_view_bank_statement_form</field>
+			<field name="model">account.bank.statement</field>
+			<field name="inherit_id" ref="account.view_bank_statement_form"/>
+			<field name="priority">20</field>
+			<field name="arch" type="xml">
+				<!-- <xpath expr="//field[@name='name']" position="replace">
+					<field name="name" placeholder="Auto..." />
+				</xpath> -->
+				<xpath expr="//field[@name='line_ids']" position="after">
+					<field name="notes" placeholder="Add an internal note.." />
+				</xpath>
+				<xpath expr="//field[@name='date']" position="after">
+					<field name="no_cek_bank"/>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</odoo>

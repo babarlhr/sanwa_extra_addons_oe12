@@ -1,0 +1,86 @@
+<odoo>
+    <data>
+        <template id="balance_purchase_report_template">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.basic_layout">
+                    <div class="header">
+                        <strong t-field="doc.name" />
+                    </div>
+                    <div class="page" style="font-size:10pt;">
+                        <style type="text/css">
+                            table.table-bordered, table.table-bordered thead tr th, table.table-bordered tbody tr td {
+                                border: black thin solid !important;
+                            }
+                            table.table thead tr th{
+                                text-align:center;
+                                vertical-align:middle;
+                            }
+                        </style>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <table class="table table-sm table-bordered" style="font-size:8pt;" >
+                                    <thead>
+                                        <tr>
+                                            <th>CUSTOMER</th>
+                                            <th>ITEM</th>
+                                            <th>PO NO</th>
+                                            <th>REMARK</th>
+                                            <th>PRICE</th>
+                                            <th>STOCK PRICE</th>
+                                            <th>RECEIVED</th>
+                                            <th>DUE DATE</th>
+                                            <th>LT</th>
+                                            <th>RECEIVED</th>
+                                            <th>BALANCE PO END</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="doc.purchase_order_line_ids" t-as="line">
+                                            <tr>
+                                                <td>
+                                                    <span t-field="line.order_id.partner_id.name" />
+                                                </td>
+                                                <td>
+                                                    <span t-field="line.order_id.product_id.name" />
+                                                </td>
+                                                <td>
+                                                    <span t-field="line.order_id.name" />
+                                                </td>
+                                                <td>
+                                                    <!-- remark -->
+                                                </td>
+                                                <td class="text-right" >
+                                                    <span t-field="line.price_unit" />
+                                                </td>
+                                                <td class="text-right" >
+                                                    <!-- stock price -->
+                                                </td>
+                                                <td class="text-center" >
+                                                    <!-- Received Date -->
+                                                </td>
+                                                <td class="text-center" >
+                                                    <!-- Due Date -->
+                                                </td>
+                                                <td>
+                                                    <!-- LT -->
+                                                </td>
+                                                <td class="text-right" >
+                                                    <span t-field="line.qty_received" />
+                                                </td>
+                                                <td class="text-right" >
+                                                    <!-- Balance END -->
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,343 @@
+<odoo>
+    <data>
+        <template id="ajm_journal_voucher_report">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.basic_layout">
+                    <t t-if="doc.can_print_voucher()">
+
+                        <!-- <div class="header" style="font-size:10pt;">
+                            <style type="text/css">
+                            table.table-bordered, table.table-bordered thead tr th, table.table-bordered tbody tr td {
+                                border: black 1px solid !important;
+                            }
+                            </style>
+
+                            
+                        </div> -->
+                        <div class="page" style="font-size:10pt;">
+                            <style type="text/css">
+                            table.table-bordered, table.table-bordered thead tr th, table.table-bordered tbody tr td {
+                                border: black thin solid !important;
+                            }
+                            </style>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    <table class="table table-sm table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <strong t-field="user.company_id.name" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <span t-field="user.company_id.street" />
+                                                    <span t-field="user.company_id.street2" />
+                                                    <span t-field="user.company_id.city" />
+                                                    <span t-field="user.company_id.zip" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <span>VOUCHER PEMBAYARAN</span>
+                                    <span>KAS/BANK</span>
+                                </div>
+                            </div>
+
+                            <br/>
+
+                            <div class="row">
+                                <div class="col-4">
+                                    <table class="table table-sm table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <strong>No. Voucher</strong>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.name" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <strong>Tanggal</strong>
+                                                </td>
+                                                <td>
+                                                    <span t-if="doc.date_voucher" t-field="doc.date_voucher" t-options='{"format": "dd MMMM yyyy"}'/>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-2"></div>
+                                <div class="col-6">
+                                    <table class="table table-sm table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <strong>Dibayar dari</strong>
+                                                </td>
+                                                <td>
+                                                    <span t-field="doc.get_cashbank_account().code" />
+                                                    <span>-</span>
+                                                    <span t-field="doc.get_cashbank_account().name" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <strong>Penerima/Alamat</strong>
+                                                </td>
+                                                <td>
+                                                    <t t-if="doc.get_partner()">
+                                                        <span t-field="doc.get_partner().name" />
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top:10px;">
+                                <div class="col-3">
+                                    <table class="table table-sm table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center">
+                                                    <strong>Nilai Tukar/Rate</strong>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">
+                                                    <span t-if="doc.amount_currency" t-field="doc.journal_currency_rate" />
+                                                    <span t-else="doc.amount_currency" t-field="user.company_id.currency_id.rate" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-3">
+                                    <table class="table table-sm table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center">
+                                                    <strong>No. Cek/Bank Rek.</strong>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">
+                                                    <t t-if="doc.no_cek_bank">
+                                                        <span t-field="doc.no_cek_bank" />
+                                                    </t>
+                                                    <t t-else="doc.no_cek_bank">
+                                                        <![CDATA[&nbsp;]]>
+                                                        <br/>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-3">
+                                    <table class="table table-sm table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center">
+                                                    <strong>Jumlah</strong>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">
+                                                    <t t-if="doc.journal_id.currency_id.position == 'before'">
+                                                        <span t-field="doc.journal_id.currency_id.symbol" />
+                                                    </t>
+
+                                                    <!-- <t t-esc="'{0:,.2f}'.format(abs(doc.amount))" /> -->
+                                                    <t t-if="doc.amount_currency" t-esc="'{0:,.2f}'.format(abs(doc.amount_currency))" />
+                                                    <t t-else="doc.amount_currency" t-esc="'{0:,.2f}'.format(abs(doc.amount))" />
+
+                                                    <t t-if="doc.journal_id.currency_id.position == 'after'">
+                                                        <span t-field="doc.journal_id.currency_id.symbol" />
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-3">
+                                    <table class="table table-sm table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center">
+                                                    <strong>Mata Uang</strong>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center">
+                                                    <!-- <span t-field="doc.journal_id.currency_id.name" /> -->
+                                                    <span t-if="doc.journal_id.currency_id" t-field="doc.journal_id.currency_id.name" />
+                                                    <span t-else="doc.journal_id.currency_id" t-field="user.company_id.currency_id.name" />
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top:10px;">
+                                <div class="col-12">
+                                    <table class="table table-sm table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">NO</th>
+                                                <th class="text-center">NO. AKUN</th>
+                                                <th class="text-center">NAMA AKUN</th>
+                                                <th class="text-center">CATATAN</th>
+                                                <th class="text-center" colspan="2">JUMLAH</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-set="rownum" t-value="1"/>
+                                            <t t-foreach="doc.line_ids" t-as="line">
+                                                <t t-if="line.account_id != doc.get_cashbank_account()">
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            <t t-esc="rownum" />
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <span t-field="line.account_id.code" />
+                                                        </td>
+                                                        <td>
+                                                            <span t-field="line.account_id.name" />
+                                                        </td>
+                                                        <td>
+                                                            <span t-field="line.name" />
+                                                        </td>
+                                                        <td class="text-right" colspan="2">
+                                                            <!-- <t t-if="line.debit > 0">
+                                                                <t t-esc="'{0:,.2f}'.format(abs(line.debit))" />
+                                                            </t>
+                                                            <t t-if="line.credit > 0">
+                                                                <t t-esc="'{0:,.2f}'.format(abs(line.credit))" />
+                                                            </t> -->
+                                                            <!-- <t t-esc="'{0:,.2f}'.format(abs(line.amount_currency))" /> -->
+
+                                                            <t t-if="doc.amount_currency" t-esc="'{0:,.2f}'.format(abs(line.amount_currency))" />
+                                                            <t t-else="doc.amount_currency">
+                                                                <t t-if="line.debit > 0">
+                                                                    <t t-esc="'{0:,.2f}'.format(abs(line.debit))" />
+                                                                </t>
+                                                                <t t-if="line.credit > 0">
+                                                                    <t t-esc="'{0:,.2f}'.format(abs(line.credit))" />
+                                                                </t>
+                                                            </t>
+
+                                                        </td>
+                                                    </tr>
+                                                    <t t-set="rownum" t-value="rownum+1"/>
+                                                </t>
+                                            </t>
+
+                                            <tr>
+                                                <td colspan="6" style="color:white;">.</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="4">
+                                                    <strong>Terbilang :</strong>
+                                                    <p style="text-transform:capitalize;">
+                                                        <i t-esc="doc.get_terbilang()" />
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    <strong>Total Bayar</strong>
+                                                </td>
+                                                <td class="text-right">
+                                                    <t t-if="doc.journal_id.currency_id.position == 'before'">
+                                                        <span t-field="doc.journal_id.currency_id.symbol" />
+                                                    </t>
+
+                                                    <!-- <t t-esc="'{0:,.2f}'.format(abs(doc.amount))" /> -->
+                                                    <t t-if="doc.amount_currency" t-esc="'{0:,.2f}'.format(abs(doc.amount_currency))" />
+                                                    <t t-else="doc.amount_currency" t-esc="'{0:,.2f}'.format(abs(doc.amount))" />
+
+                                                    <t t-if="doc.journal_id.currency_id.position == 'after'">
+                                                        <span t-field="doc.journal_id.currency_id.symbol" />
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                            <!-- <tr>
+                                                <td colspan="6" style="color:white;">.</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">
+                                                    <strong>Keterangan :</strong>
+                                                    <p>
+                                                        <i t-field="doc.narration" />
+                                                    </p>
+                                                </td>
+                                            </tr> -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top:15px;">
+                                <div class="col-3 text-center ">
+                                    <strong>Disiapkan,</strong>
+                                    <![CDATA[&nbsp;]]>
+                                    <![CDATA[&nbsp;]]>
+                                    <![CDATA[&nbsp;]]>
+                                    <![CDATA[&nbsp;]]>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                __________________
+                                </div>
+                                <div class="col-3 text-center ">
+                                    <strong>Verifikasi,</strong>
+                                    <![CDATA[&nbsp;]]>
+                                    <![CDATA[&nbsp;]]>
+                                    <![CDATA[&nbsp;]]>
+                                    <![CDATA[&nbsp;]]>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                __________________
+                                </div>
+                                <div class="col-3 text-center ">
+                                    <strong>Menyetujui,</strong>
+                                    <![CDATA[&nbsp;]]>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                __________________
+                                    <br/>
+                                Direksi
+                                </div>
+                                <div class="col-3 text-center ">
+                                    <strong>Diterima oleh,</strong>
+                                    <![CDATA[&nbsp;]]>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                __________________
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="footer">
+
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

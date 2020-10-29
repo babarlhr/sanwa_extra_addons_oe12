@@ -1,0 +1,40 @@
+<odoo>
+    <data>
+        <act_window
+            id="balance_po_wizard_act"
+            res_model="balance.purchase.report"
+            name="Balance PO Report"
+            src_model="purchase.order"
+            view_mode="form"
+            multi="True"
+            target="new"
+            key2="client_action_multi"
+        />
+
+        <record id="balance_po_wizard_form" model="ir.ui.view">
+                    <field name="name">balance_po_wizard_form</field>
+                    <field name="model">balance.purchase.report</field>
+                    <field name="arch" type="xml">
+                        <form>
+                            <group>
+                                <group>
+                                    <field name="date_start" />
+                                </group>
+                                <group>
+                                    <field name="date_end" />
+                                </group>
+                            </group>
+                            <footer>
+                                <button type="object" name="action_submit" string="Submit" class="oe_highlight"/>
+                                <button string="Cancel" class="oe_link" special="cancel"/>
+                            </footer>
+                        </form>
+                    </field>
+                </record>
+
+
+                <menuitem id="purchase_report_root" name="Reporting" sequence="99" parent="purchase.menu_purchase_root" groups="purchase.group_purchase_manager" />
+                <menuitem id="purchase.purchase_report" name="Purchase Report" parent="purchase_report_root" sequence="99" groups="purchase.group_purchase_manager" action="purchase.action_purchase_order_report_all"/>
+                <menuitem id="balance_purchase_report_menu" name="Balance PO" parent="purchase_report_root" sequence="100" groups="purchase.group_purchase_manager" action="balance_po_wizard_act"/>
+    </data>
+</odoo>

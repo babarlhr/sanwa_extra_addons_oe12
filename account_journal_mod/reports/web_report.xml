@@ -1,0 +1,96 @@
+<odoo>
+    <data>
+        <template id="ajm_external_layout_standard" inherit_id="web.external_layout_standard">
+            <xpath expr="//div[@class='header']" position="replace">
+                <div class="header">
+                    <style type="text/css">
+                        .table-company-address tbody tr td {
+                            padding:0;
+                        }
+                    </style>
+
+                    <div class="row">
+                        <div class="col-12 text-center ">
+                            <h3 t-field="user.company_id.name" />
+                            <![CDATA[&nbsp;]]>
+                            <br/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8"></div>
+                        <div class="col-4">
+                            <table class="table table-sm table-borderless table-company-address">
+                                <tbody>
+                                    <t t-if="user.company_id">
+                                        <tr>
+                                            <td>
+                                                <strong>Office/Factory</strong>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="user.company_id.street">
+                                        <tr>
+                                            <td>
+                                                <span t-field="user.company_id.street" />
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="user.company_id.street2">
+                                        <tr>
+                                            <td>
+                                                <span t-field="user.company_id.street2" />
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr>
+                                        <td>
+                                            <t t-if="user.company_id.city">
+                                                <span t-field="user.company_id.city" />
+
+                                            </t>
+                                            <t t-if="user.company_id.state_id">
+
+                                                <span>, </span>
+                                                <span t-field="user.company_id.state_id" />
+
+                                            </t>
+                                            <t t-if="user.company_id.zip">
+
+                                                <span>, </span>
+                                                <span t-field="user.company_id.zip" />
+
+                                            </t>
+                                            <t t-if="user.company_id.country_id">
+
+                                                <span>, </span>
+                                                <span t-field="user.company_id.country_id" />
+
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-6 text-right">
+                            <t t-if="o._name=='sale.order'">
+                                <h2>SALES ORDER</h2>
+                            </t>
+                            <t t-elif="o._name=='purchase.order'">
+                                <h2>PURCHASE ORDER</h2>
+                            </t>
+                            <t t-elif="o._name=='account.invoice'">
+                                <h2>INVOICE</h2>
+                            </t>
+                            <t t-elif="o._name=='stock.picking'">
+                                <h2>DELIVERY ORDER</h2>
+                            </t>
+                            <t t-else="">
+                            </t>
+
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

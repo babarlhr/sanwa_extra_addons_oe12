@@ -1,0 +1,219 @@
+<odoo>
+    <data>
+        <template id="report_bukti_journal">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.basic_layout">
+                    <!-- <div class="header" style="font-size:10pt;">
+                        <style type="text/css">
+                            table.table-bordered, table.table-bordered thead tr th, table.table-bordered tbody tr td {
+                                border: black thin solid !important;
+                            }
+                        </style>
+
+                        
+                    </div> -->
+                    <div class="page" style="font-size:10pt;">
+                        <style type="text/css">
+                            table.table-bordered, table.table-bordered thead tr th, table.table-bordered tbody tr td {
+                                border: black thin solid !important;
+                            }
+                        </style>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <table class="table table-sm table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <strong t-field="user.company_id.name" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span t-field="user.company_id.street" />
+                                                <span t-field="user.company_id.street2" />
+                                                <span t-field="user.company_id.city" />
+                                                <span t-field="user.company_id.zip" />
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-2 "></div>
+                            <div class="col-4 text-right">
+                                <h4>BUKTI JURNAL</h4>
+                            </div>
+                        </div>
+
+                        <br/>
+
+                        <div class="row">
+                            <div class="col-4">
+                                <table class="table table-sm table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <strong>No. Voucher</strong>
+                                            </td>
+                                            <td>
+                                                <span t-field="doc.name" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>Tanggal</strong>
+                                            </td>
+                                            <td>
+                                                <span t-field="doc.date" t-options='{"format": "dd MMMM yyyy"}'/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-8"></div>
+                        </div>
+                        <div class="row" style="margin-top:5px;">
+                            <div class="col-12">
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">NO. AKUN</th>
+                                            <th class="text-center">NAMA AKUN</th>
+                                            <th class="text-center">DEBIT</th>
+                                            <th class="text-center">KREDIT</th>
+                                            <th class="text-center" colspan="2">CATATAN</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-set="total_debit" t-value="0"/>
+                                        <t t-set="total_credit" t-value="0"/>
+
+                                        <t t-foreach="doc.line_ids.sorted(key=lambda x: x.debit,reverse=True)" t-as="line">
+                                            <tr>
+                                                <td class="text-center">
+                                                    <span t-field="line.account_id.code" />
+                                                </td>
+                                                <td>
+                                                    <span t-field="line.account_id.name" />
+                                                </td>
+                                                <td class="text-right">
+                                                    <t t-if="line.debit > 0">
+                                                        <t t-set="total_debit" t-value="total_debit + line.debit"/>
+                                                        <t t-esc="'{0:,.2f}'.format(line.debit)" />
+                                                    </t>
+                                                </td>
+                                                <td class="text-right">
+                                                    <t t-if="line.credit > 0">
+                                                        <t t-set="total_credit" t-value="total_credit + line.credit"/>
+                                                        <t t-esc="'{0:,.2f}'.format(line.credit)" />
+                                                    </t>
+                                                </td>
+                                                <td colspan="2">
+                                                    <span t-field="line.name" />
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <tr>
+                                            <td colspan="6" style="color:white;">.</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" rowspan="2">
+                                                <strong>Terbilang :</strong>
+                                                <p style="text-transform:capitalize;">
+                                                    <i t-esc="doc.get_terbilang()" />
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <strong>Debit</strong>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-if="total_debit > 0">
+                                                    <t t-esc="'{0:,.2f}'.format(total_debit)" />
+                                                </t>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <strong>Credit</strong>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-if="total_credit > 0">
+                                                    <t t-esc="'{0:,.2f}'.format(total_credit)" />
+                                                </t>
+                                            </td>
+                                        </tr>
+                                        <!-- <tr>
+                                            <td colspan="6" style="color:white;">.</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="6">
+                                                <strong>Keterangan :</strong>
+                                                <p>
+                                                    <i t-field="doc.narration" />
+                                                </p>
+                                            </td>
+                                        </tr> -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top:15px;">
+                            <div class="col-1">
+
+                            </div>
+                            <div class="col-3 text-center ">
+                                <strong>Disiapkan,</strong>
+                                <![CDATA[&nbsp;]]>
+                                <![CDATA[&nbsp;]]>
+                                <![CDATA[&nbsp;]]>
+                                <![CDATA[&nbsp;]]>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                __________________
+                            </div>
+                            <div class="col-3 text-center ">
+                                <strong>Diperiksa,</strong>
+                                <![CDATA[&nbsp;]]>
+                                <![CDATA[&nbsp;]]>
+                                <![CDATA[&nbsp;]]>
+                                <![CDATA[&nbsp;]]>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                __________________
+                            </div>
+                            <div class="col-3 text-center ">
+                                <strong>Disetujui oleh,</strong>
+                                <![CDATA[&nbsp;]]>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <br/>
+                                __________________
+                                <br/>
+                                Direksi
+                            </div>
+                            <div class="col-1">
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="footer">
+
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
